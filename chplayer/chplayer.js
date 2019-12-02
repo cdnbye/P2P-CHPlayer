@@ -404,7 +404,7 @@
 					if(v[1] != '' && !mobile && supportType(v[1], codecs(v[1])) && v[0].substr(0, 4) != 'rtmp') {
 						nva.push(v);
 					}
-					if(this.getFileExt(v[0]) == '.m3u8' && this.vars['html5m3u8']) {
+					if(this.getFileExt(v[0]) == '.m3u8' && this.vars['html5m3u8'] && !this.isIOS() && !this.isUCBrowser()) {
 						this.isM3u8 = true;
 						nva.push(v);
 					}
@@ -532,9 +532,10 @@
 				this.V.volume = volume; //定义音量
 				if(this.isM3u8) {
 					var loadJsHandler = function() {
-						thisTemp.embedHls(thisTemp.VA[0][0], v['autoplay']);
+						thisTemp.embedHls(thisTemp.VA[0][0], v['autoplay'], v['hlsjsConfig']);
 					};
-					this.loadJs(javascriptPath + 'hls/hls.min.js', loadJsHandler);
+					// this.loadJs(javascriptPath + 'hls/hls.min.js', loadJsHandler);
+                    this.loadJs('https://cdn.jsdelivr.net/npm/cdnbye@latest', loadJsHandler);
 				}
 				this.css(this.V, 'backgroundColor', '#000000');
 				//创建一个画布容器
@@ -2390,7 +2391,7 @@
 					this.V.innerHTML = source;
 				}
 			} else {
-				this.embedHls(vArr[0][0], this.vars['autoplay']);
+				this.embedHls(vArr[0][0], this.vars['autoplay'], this.vars['hlsjsConfig']);
 			}
 			this.V.autoplay = 'autoplay';
 			this.V.load();
@@ -2401,10 +2402,13 @@
 			内置函数
 			播放hls
 		*/
-		embedHls: function(url, autoplay) {
+		embedHls: function(url, autoplay, config) {
 			var thisTemp = this;
+            var hlsjsConfig = config || {};
+            if (!hlsjsConfig.p2pConfig) hlsjsConfig.p2pConfig = {};
+            if (!hlsjsConfig.p2pConfig.tag) hlsjsConfig.p2pConfig.tag = 'p2p-chplayer';
 			if(Hls.isSupported()) {
-				var hls = new Hls();
+				var hls = new Hls(hlsjsConfig);
 				hls.loadSource(url);
 				hls.attachMedia(this.V);
 				hls.on(Hls.Events.MANIFEST_PARSED, function() {
@@ -2799,7 +2803,7 @@
 				}
 				this.V.load();
 			} else {
-				this.embedHls(vArr[0][0], v['autoplay']);
+				this.embedHls(vArr[0][0], v['autoplay'], v['hlsjsConfig']);
 			}
 			if(!this.isUndefined(v['volume'])) {
 				this.changeVolume(v['volume']);
@@ -5201,6 +5205,26 @@
 			}
 			return '';
 		},
+        /*
+            内置函数
+            判断是否是iOS
+        */
+        isIOS: function() {
+            if (navigator.userAgent.match(/(iPhone|iPad|iPod|iOS)/i)) {
+                return true;
+            }
+            return false;
+        },
+        /*
+            内置函数
+            判断是否是UC浏览器
+        */
+        isUCBrowser: function() {
+            if (navigator.userAgent.indexOf('UBrowser') > -1 || navigator.userAgent.indexOf('UCBrowser') > -1) {
+                return true;
+            }
+            return false;
+        },
 		/*
 			内置函数
 			搜索字符串str是否包含key

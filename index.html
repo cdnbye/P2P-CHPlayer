@@ -13,6 +13,7 @@
 			var videoObject = {
 				container: '#video', //容器的ID或className
 				variable: 'player',
+                html5m3u8:true,
 				volume: 0.6, //默认音量
 				poster: 'screenshot/wdm.jpg', //封面图片地址
 				autoplay: false, //是否自动播放
@@ -46,16 +47,7 @@
 						time: 120,
 					}
 				], //提示点，words=提示点的内容，time=提示点对应的时间
-				video: [
-					['http://img.ksbbs.com/asset/Mon_1703/05cacb4e02f9d9e.mp4', 'video/mp4', '中文标清', 0],
-					['http://img.ksbbs.com/asset/Mon_1703/d0897b4e9ddd9a5.mp4', 'video/mp4', '中文高清', 0],
-					['http://img.ksbbs.com/asset/Mon_1703/eb048d7839442d0.mp4', 'video/mp4', '英文高清', 10],
-					['http://img.ksbbs.com/asset/Mon_1703/d30e02a5626c066.mp4', 'video/mp4', '英文超清', 0],
-				]
-				/*video:[
-					['http://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index.m3u8','','标清',0],
-					['http://cdn.theoplayer.com/video/star_wars_episode_vii-the_force_awakens_official_comic-con_2015_reel_(2015)/index.m3u8','','高清',10]
-				]*/
+				video: 'http://cn1.ruioushang.com/hls/20190824/6bbb04d6e14df9b331cf88409a8846c6/1566615719/index.m3u8',
 			};
 			var player = new chplayer(videoObject);
 
